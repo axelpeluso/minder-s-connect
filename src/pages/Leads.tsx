@@ -23,10 +23,10 @@ const STATUS_LABEL: Record<LeadStatus, string> = {
 };
 
 const STATUS_CLASS: Record<LeadStatus, string> = {
-  new: "bg-muted text-muted-foreground",
-  contacted: "bg-primary/10 text-primary",
-  in_progress: "bg-amber-100 text-amber-800",
-  done: "bg-emerald-100 text-emerald-800",
+  new: "bg-rose-50 text-rose-700 ring-1 ring-rose-200",
+  contacted: "bg-primary/10 text-primary ring-1 ring-primary/20",
+  in_progress: "bg-amber-50 text-amber-800 ring-1 ring-amber-200",
+  done: "bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200",
 };
 
 const STATUSES: LeadStatus[] = ["new", "contacted", "in_progress", "done"];
