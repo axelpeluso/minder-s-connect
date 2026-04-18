@@ -23,10 +23,10 @@ const STATUS_LABEL: Record<LeadStatus, string> = {
 };
 
 const STATUS_CLASS: Record<LeadStatus, string> = {
-  new: "bg-muted text-muted-foreground",
-  contacted: "bg-primary/10 text-primary",
-  in_progress: "bg-amber-100 text-amber-800",
-  done: "bg-emerald-100 text-emerald-800",
+  new: "bg-rose-50 text-rose-700 ring-1 ring-rose-200",
+  contacted: "bg-primary/10 text-primary ring-1 ring-primary/20",
+  in_progress: "bg-amber-50 text-amber-800 ring-1 ring-amber-200",
+  done: "bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200",
 };
 
 const STATUSES: LeadStatus[] = ["new", "contacted", "in_progress", "done"];
@@ -311,54 +311,53 @@ export default function Leads() {
       </div>
 
       {/* Spreadsheet */}
-      <div className="overflow-auto rounded-lg border border-border bg-card">
+      <div className="overflow-auto">
         <table className="w-full border-collapse text-sm">
-          <thead className="sticky top-0 bg-muted/40">
-            <tr>
-              <th className="w-10 border-b border-r border-border px-2 py-2 text-center text-xs font-medium text-muted-foreground">
-                #
+          <thead className="sticky top-0 z-10 bg-background">
+            <tr className="border-b border-border">
+              <th className="w-12 px-3 py-3 text-left text-[11px] font-normal uppercase tracking-wider text-muted-foreground">
+                ID
               </th>
-              {COLUMNS.map((col) => (
-                <th
-                  key={col.key}
-                  className={cn(
-                    "border-b border-r border-border px-3 py-2 text-left text-xs font-medium text-muted-foreground last:border-r-0",
-                    col.width,
-                  )}
-                >
-                  {col.label}
-                </th>
-              ))}
+              {COLUMNS.map((col) => {
+                const numeric = col.type === "number";
+                return (
+                  <th
+                    key={col.key}
+                    className={cn(
+                      "px-3 py-3 text-[11px] font-normal uppercase tracking-wider text-muted-foreground",
+                      numeric ? "text-right" : "text-left",
+                      col.width,
+                    )}
+                  >
+                    {col.label}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>
-            {loading && (
-              <tr>
-                <td colSpan={COLUMNS.length + 1} className="py-10 text-center text-sm text-muted-foreground">
-                  Loading…
-                </td>
-              </tr>
-            )}
-            {!loading && filtered.length === 0 && (
-              <tr>
-                <td colSpan={COLUMNS.length + 1} className="py-10 text-center text-sm text-muted-foreground">
-                  No leads.
-                </td>
-              </tr>
-            )}
+...
             {filtered.map((lead, idx) => (
-              <tr key={lead.id} className="group hover:bg-muted/30">
-                <td className="border-b border-r border-border px-2 py-0 text-center text-xs text-muted-foreground">
-                  {idx + 1}
+              <tr
+                key={lead.id}
+                className={cn(
+                  "group border-b border-border/60 transition-colors hover:bg-primary/[0.03]",
+                  idx % 2 === 1 && "bg-muted/20",
+                )}
+              >
+                <td className="px-3 py-3 text-xs tabular-nums text-muted-foreground">
+                  {String(9700 - idx).padStart(4, "0")}
                 </td>
                 {COLUMNS.map((col) => {
                   const isEditing = editing?.row === lead.id && editing.col === col.key;
                   const value = getCellValue(lead, col);
+                  const numeric = col.type === "number";
                   return (
                     <td
                       key={col.key}
                       className={cn(
-                        "border-b border-r border-border p-0 align-middle last:border-r-0",
+                        "p-0 align-middle",
+                        numeric && "text-right",
                         isEditing && "ring-2 ring-inset ring-primary",
                       )}
                       onClick={() => !isEditing && startEdit(lead, col)}
@@ -470,10 +469,10 @@ function CellRenderer({
   if (col.type === "status") {
     const s = (value || "new") as LeadStatus;
     return (
-      <div className="px-3 py-2">
+      <div className="px-3 py-2.5">
         <span
           className={cn(
-            "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+            "inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
             STATUS_CLASS[s],
           )}
         >
@@ -485,7 +484,7 @@ function CellRenderer({
 
   if (col.key === "last_contact") {
     return (
-      <div className="px-3 py-2 text-sm text-muted-foreground">
+      <div className="px-3 py-2.5 text-sm text-muted-foreground">
         {lastContact ? `${formatDistanceToNowStrict(new Date(lastContact))} ago` : "—"}
       </div>
     );
@@ -494,7 +493,7 @@ function CellRenderer({
   if (col.type === "contact" && value) {
     const channel = col.key === "email" ? "email" : "sms";
     return (
-      <div className="flex items-center justify-between gap-2 px-3 py-2">
+      <div className="flex items-center justify-between gap-2 px-3 py-2.5">
         <span className="truncate text-sm">{value}</span>
         <FollowupPopover lead={lead} channel={channel} onSend={onSendFollowup}>
           <button
@@ -512,12 +511,20 @@ function CellRenderer({
   if (col.key === "lead_score") {
     const n = value ? Number(value) : null;
     const cls =
-      n == null ? "text-muted-foreground" : n >= 75 ? "text-emerald-700" : n >= 40 ? "text-amber-700" : "text-muted-foreground";
-    return <div className={cn("px-3 py-2 text-sm font-semibold", cls)}>{value || "—"}</div>;
+      n == null ? "text-muted-foreground" : n >= 75 ? "text-emerald-700" : n >= 40 ? "text-amber-700" : "text-rose-600";
+    return <div className={cn("px-3 py-2.5 text-right text-sm font-semibold tabular-nums", cls)}>{value || "—"}</div>;
+  }
+
+  if (col.key === "full_name") {
+    return (
+      <div className="px-3 py-2.5 text-sm font-semibold text-foreground">
+        {value || "—"}
+      </div>
+    );
   }
 
   return (
-    <div className={cn("px-3 py-2 text-sm", !value && "text-muted-foreground")}>
+    <div className={cn("px-3 py-2.5 text-sm", !value && "text-muted-foreground")}>
       {value || "—"}
     </div>
   );
