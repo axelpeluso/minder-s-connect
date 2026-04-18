@@ -6,35 +6,35 @@
 
 @layer base {
   :root {
-    /* Surfaces */
-    --background: 36 33% 97%;          /* #FAF8F5 */
-    --foreground: 18 14% 11%;          /* #1F1A17 */
+    /* Surfaces — minimalist near-white */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 18 14% 11%;
+    --card-foreground: 0 0% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 18 14% 11%;
+    --popover-foreground: 0 0% 10%;
 
-    /* Brand */
-    --primary: 351 36% 26%;            /* #5A2A33 burgundy */
-    --primary-foreground: 36 33% 97%;
+    /* Brand — Bellezza pink accent */
+    --primary: 348 78% 60%;            /* #E94B6A coral pink */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 184 28% 43%;          /* #4E8B8F teal */
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 348 78% 96%;
+    --secondary-foreground: 348 60% 30%;
 
-    --muted: 36 20% 94%;
-    --muted-foreground: 30 5% 40%;     /* #6B6560 */
+    --muted: 0 0% 97%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 184 28% 43%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 348 78% 96%;
+    --accent-foreground: 348 60% 30%;
 
     --destructive: 0 70% 45%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 33 18% 89%;              /* #E8E3DC */
-    --input: 33 18% 89%;
-    --ring: 184 28% 43%;
+    --border: 0 0% 92%;
+    --input: 0 0% 92%;
+    --ring: 348 78% 60%;
 
     /* Lead score ramp */
     --score-high: 132 45% 34%;         /* #2F7D3F */
@@ -43,14 +43,14 @@
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 18 14% 11%;
-    --sidebar-primary: 351 36% 26%;
-    --sidebar-primary-foreground: 36 33% 97%;
-    --sidebar-accent: 36 20% 94%;
-    --sidebar-accent-foreground: 18 14% 11%;
-    --sidebar-border: 33 18% 89%;
-    --sidebar-ring: 184 28% 43%;
+    --sidebar-background: 0 0% 99%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 348 78% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 348 78% 96%;
+    --sidebar-accent-foreground: 348 60% 30%;
+    --sidebar-border: 0 0% 94%;
+    --sidebar-ring: 348 78% 60%;
   }
 
   .dark {

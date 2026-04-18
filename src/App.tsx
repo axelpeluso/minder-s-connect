@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import AppShell from "@/components/AppShell";
 import Conversations from "./pages/Conversations";
+import Leads from "./pages/Leads";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -16,8 +17,16 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/conversations" replace />} />
-          <Route path="/login" element={<Navigate to="/conversations" replace />} />
+          <Route path="/" element={<Navigate to="/leads" replace />} />
+          <Route path="/login" element={<Navigate to="/leads" replace />} />
+          <Route
+            path="/leads"
+            element={
+              <AppShell>
+                <Leads />
+              </AppShell>
+            }
+          />
           <Route
             path="/conversations"
             element={
