@@ -1,6 +1,6 @@
 import { ReactNode, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, MessagesSquare, Users } from "lucide-react";
+import { LayoutDashboard, MapPin, MessagesSquare, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { seedLeadsIfEmpty } from "@/lib/seedLeads";
 
@@ -36,6 +36,10 @@ export default function AppShell({ children }: { children: ReactNode }) {
           <NavLink to="/conversations" className={linkClass}>
             <MessagesSquare className="h-4 w-4" />
             Conversations
+          </NavLink>
+          <NavLink to="/newsletters" className={linkClass}>
+            <MapPin className="h-4 w-4" />
+            Miami Local Data
           </NavLink>
         </nav>
       </aside>
