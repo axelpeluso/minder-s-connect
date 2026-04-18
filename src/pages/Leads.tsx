@@ -11,6 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ComposeEmailDialog } from "@/components/ComposeEmailDialog";
 import { cn } from "@/lib/utils";
 
 type LeadStatus = "new" | "contacted" | "in_progress" | "done";
