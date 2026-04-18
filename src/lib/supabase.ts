@@ -51,5 +51,4 @@ export type Customer = {
 export type Agent = {
   id: string;
   email: string;
-  display_name: string | null;
 };
