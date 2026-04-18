@@ -46,7 +46,9 @@ function statusClass(status: string) {
   }
 }
 
-function anonName(customerId: string) {
+function customerName(c: Customer | null, customerId: string) {
+  if (c?.email) return c.email;
+  if (c?.phone) return c.phone;
   return `Anonymous #${customerId.slice(0, 6)}`;
 }
 
@@ -75,12 +77,13 @@ export default function Conversations() {
       const { data, error: err } = await supabase
         .from("conversations")
         .select(
-          `id, customer_id, status, intent, message_count, last_message_at,
-           assigned_agent_id, handoff_at, created_at, summary,
-           customer:customers ( id, display_name, preferred_language, lead_score,
-             email, phone, nail_shape, color_family, finish, experience_level,
-             occasion, urgency_days, budget_range, hema_concerns, past_reactions,
-             sensitive_skin, tags )`,
+          `id, customer_id, status, handoff_summary, handoff_suggested_reply,
+           entry_page, started_at, last_message_at, closed_at,
+           customer:customers ( id, email, phone, preferred_language, lead_score,
+             nail_shape, color_family, finish, experience_level,
+             occasion, urgency_days, budget_range, intent, hema_concerns,
+             past_reactions, sensitive_skin, lead_factors, metadata,
+             created_at, updated_at )`,
         )
         .order("last_message_at", { ascending: false, nullsFirst: false })
         .limit(500);
@@ -115,12 +118,13 @@ export default function Conversations() {
           const { data } = await supabase
             .from("conversations")
             .select(
-              `id, customer_id, status, intent, message_count, last_message_at,
-               assigned_agent_id, handoff_at, created_at, summary,
-               customer:customers ( id, display_name, preferred_language, lead_score,
-                 email, phone, nail_shape, color_family, finish, experience_level,
-                 occasion, urgency_days, budget_range, hema_concerns, past_reactions,
-                 sensitive_skin, tags )`,
+              `id, customer_id, status, handoff_summary, handoff_suggested_reply,
+               entry_page, started_at, last_message_at, closed_at,
+               customer:customers ( id, email, phone, preferred_language, lead_score,
+                 nail_shape, color_family, finish, experience_level,
+                 occasion, urgency_days, budget_range, intent, hema_concerns,
+                 past_reactions, sensitive_skin, lead_factors, metadata,
+                 created_at, updated_at )`,
             )
             .eq("id", next.id)
             .maybeSingle();
@@ -189,7 +193,7 @@ export default function Conversations() {
       const score = r.customer?.lead_score ?? 0;
       if (score < scoreRange[0] || score > scoreRange[1]) return false;
       if (q) {
-        const name = (r.customer?.display_name ?? anonName(r.customer_id)).toLowerCase();
+        const name = customerName(r.customer, r.customer_id).toLowerCase();
         const matchName = name.includes(q);
         const matchMsg = matchedConvIds?.has(r.id) ?? false;
         if (!matchName && !matchMsg) return false;
@@ -269,34 +273,33 @@ export default function Conversations() {
               <TableHead>Score</TableHead>
               <TableHead>Intent</TableHead>
               <TableHead>Last message</TableHead>
-              <TableHead className="text-right">Msgs</TableHead>
               <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading && (
               <TableRow>
-                <TableCell colSpan={7} className="py-10 text-center text-sm text-muted-foreground">
+                <TableCell colSpan={6} className="py-10 text-center text-sm text-muted-foreground">
                   Loading conversations…
                 </TableCell>
               </TableRow>
             )}
             {!loading && error && (
               <TableRow>
-                <TableCell colSpan={7} className="py-10 text-center text-sm text-destructive">
+                <TableCell colSpan={6} className="py-10 text-center text-sm text-destructive">
                   {error}
                 </TableCell>
               </TableRow>
             )}
             {!loading && !error && filtered.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="py-10 text-center text-sm text-muted-foreground">
+                <TableCell colSpan={6} className="py-10 text-center text-sm text-muted-foreground">
                   No conversations match the current filters.
                 </TableCell>
               </TableRow>
             )}
             {filtered.map((r) => {
-              const name = r.customer?.display_name || anonName(r.customer_id);
+              const name = customerName(r.customer, r.customer_id);
               return (
                 <TableRow
                   key={r.id}
@@ -324,14 +327,13 @@ export default function Conversations() {
                     </span>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {r.intent ?? "—"}
+                    {r.customer?.intent ?? "—"}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {r.last_message_at
                       ? `${formatDistanceToNowStrict(new Date(r.last_message_at))} ago`
                       : "—"}
                   </TableCell>
-                  <TableCell className="text-right text-sm">{r.message_count ?? 0}</TableCell>
                   <TableCell>
                     <span
                       className={cn(

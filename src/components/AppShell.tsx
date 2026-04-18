@@ -40,8 +40,9 @@ export default function AppShell({ children }: { children: ReactNode }) {
         <div className="border-t border-sidebar-border p-3">
           <div className="mb-2 px-2 text-xs text-muted-foreground">
             <p className="truncate font-medium text-sidebar-foreground">
-              {agent?.email}
+              {agent?.name ?? agent?.email}
             </p>
+            {agent?.name && <p className="truncate">{agent.email}</p>}
           </div>
           <Button variant="ghost" size="sm" className="w-full justify-start" onClick={onSignOut}>
             <LogOut className="h-4 w-4" />
