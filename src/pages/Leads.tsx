@@ -484,7 +484,7 @@ function CellRenderer({
 
   if (col.key === "last_contact") {
     return (
-      <div className="px-3 py-2 text-sm text-muted-foreground">
+      <div className="px-3 py-2.5 text-sm text-muted-foreground">
         {lastContact ? `${formatDistanceToNowStrict(new Date(lastContact))} ago` : "—"}
       </div>
     );
@@ -493,7 +493,7 @@ function CellRenderer({
   if (col.type === "contact" && value) {
     const channel = col.key === "email" ? "email" : "sms";
     return (
-      <div className="flex items-center justify-between gap-2 px-3 py-2">
+      <div className="flex items-center justify-between gap-2 px-3 py-2.5">
         <span className="truncate text-sm">{value}</span>
         <FollowupPopover lead={lead} channel={channel} onSend={onSendFollowup}>
           <button
@@ -511,12 +511,20 @@ function CellRenderer({
   if (col.key === "lead_score") {
     const n = value ? Number(value) : null;
     const cls =
-      n == null ? "text-muted-foreground" : n >= 75 ? "text-emerald-700" : n >= 40 ? "text-amber-700" : "text-muted-foreground";
-    return <div className={cn("px-3 py-2 text-sm font-semibold", cls)}>{value || "—"}</div>;
+      n == null ? "text-muted-foreground" : n >= 75 ? "text-emerald-700" : n >= 40 ? "text-amber-700" : "text-rose-600";
+    return <div className={cn("px-3 py-2.5 text-right text-sm font-semibold tabular-nums", cls)}>{value || "—"}</div>;
+  }
+
+  if (col.key === "full_name") {
+    return (
+      <div className="px-3 py-2.5 text-sm font-semibold text-foreground">
+        {value || "—"}
+      </div>
+    );
   }
 
   return (
-    <div className={cn("px-3 py-2 text-sm", !value && "text-muted-foreground")}>
+    <div className={cn("px-3 py-2.5 text-sm", !value && "text-muted-foreground")}>
       {value || "—"}
     </div>
   );
